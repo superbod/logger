@@ -2,8 +2,9 @@
 
 /** @var yii\web\View $this */
 /** @var yii\bootstrap5\ActiveForm $form */
-/** @var \frontend\models\SignupForm $model */
+/** @var SignupForm $model */
 
+use frontend\models\SignupForm;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\ActiveForm;
 
@@ -24,6 +25,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= $form->field($model, 'email') ?>
 
                 <?= $form->field($model, 'password')->passwordInput() ?>
+
+                <?php echo $form->field($model, 'first_name'); ?>
+                <?php echo $form->field($model, 'last_name'); ?>
+                <?php
+                echo $form->field($model, 'date_of_birth')->widget(\yii\jui\DatePicker::className(), [
+                    'options' => ['class' => 'form-control']
+                ]);
+                ?>
+                <?php echo $form->field($model, 'pasport_number'); ?>
+                <?php echo $form->field($model, 'pasport_expiry_date')->widget(\yii\jui\DatePicker::className(), [
+                    'options' => ['class' => 'form-control']
+                ]);
+                ?>
 
                 <div class="form-group">
                     <?= Html::submitButton('Signup', ['class' => 'btn btn-primary', 'name' => 'signup-button']) ?>

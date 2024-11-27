@@ -5,6 +5,7 @@ namespace frontend\models;
 use Yii;
 use yii\base\Model;
 use common\models\User;
+use yii\db\Exception;
 
 /**
  * Signup form
@@ -14,6 +15,11 @@ class SignupForm extends Model
     public $username;
     public $email;
     public $password;
+    public $first_name;
+    public $last_name;
+    public $date_of_birth;
+    public $pasport_number;
+    public $pasport_expiry_date;
 
 
     /**
@@ -35,13 +41,19 @@ class SignupForm extends Model
 
             ['password', 'required'],
             ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
+
+            [['first_name', 'last_name', 'date_of_birth', 'pasport_number', 'pasport_expiry_date'], 'required'],
+            [['first_name', 'last_name', 'pasport_number'], 'string', 'min' => 2, 'max' => 32],
+            [['date_of_birth', 'pasport_expiry_date'], 'filter', 'filter' => function ($value) {
+                return (new \DateTimeImmutable($value))->format('Y-m-d');
+            }],
+            ['pasport_number', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This pasport has already been used.'],
         ];
     }
 
     /**
-     * Signs user up.
-     *
-     * @return bool whether the creating new account was successful and email was sent
+     * @return bool|null whether the creating new account was successful and email was sent
+     * @throws Exception
      */
     public function signup()
     {
@@ -52,6 +64,12 @@ class SignupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
+        $user->first_name = $this->first_name;
+        $user->last_name = $this->last_name;
+        $user->date_of_birth = $this->date_of_birth;
+        $user->pasport_number = $this->pasport_number;
+        $user->pasport_expiry_date = $this->pasport_expiry_date;
+
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();

@@ -22,6 +22,12 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $date_of_birth
+ * @property string $pasport_number
+ * @property string $pasport_expiry_date
+ * @property array $uploaded_files
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -56,6 +62,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            ['pasport_number', 'unique'],
         ];
     }
 
